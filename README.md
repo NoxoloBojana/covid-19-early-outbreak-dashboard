@@ -26,11 +26,11 @@ The main objectives are to:
 
 ## Technologies Used
 
-- HTML – Creates the structure of the website.
-- CSS – Styles the dashboard.
-- JavaScript – Loads and processes the data.
-- JSON – Stores the COVID-19 dataset.
-- Chart.js – Planned for data visualisation.
+- **HTML** – Creates the structure of the website.
+- **CSS** – Styles the dashboard.
+- **JavaScript** – Loads and processes the data.
+- **JSON** – Stores the COVID-19 dataset.
+- **Chart.js** – Planned for data visualisation.
 
 ## Project Structure
 
@@ -67,7 +67,9 @@ For example, South Africa's data on 31 March 2020:
 
 Calculation:
 
-`1353 - 5 - 31 = 1317`
+```text
+1353 - 5 - 31 = 1317
+```
 
 Therefore, South Africa had 1,317 active cases in the dataset on 31 March 2020.
 
@@ -88,23 +90,8 @@ Therefore, South Africa had 1,317 active cases in the dataset on 31 March 2020.
 - [x] Retrieved South Africa's data.
 - [x] Identified the latest recorded observation.
 - [x] Calculated active cases.
-- [ ] Build dashboard statistic cards.
-- [ ] Add country selection.
-- [ ] Create data visualisation charts.
-- [ ] Test the dashboard.
-
-## Data Notes
-
-The dataset contains selected observation dates rather than daily records for every day.
-
-Changes between consecutive records should therefore be understood as increases over the recorded interval, not necessarily the number of new cases on a single day.
-
-## Author
-
-Noxolo Bojana
-
-## Data Source
-
-Johns Hopkins University Center for Systems Science and Engineering (CSSE).
+- [x] Built dashboard statistic cards.
+- [x] Added country selection.
+- [ ] Create data visualisation chartsopkins University Center for Systems Science and Engineering (CSSE).
 
 

@@ -12,48 +12,229 @@ async function loadCovidData() {
 
         console.log("All COVID-19 data:", covidData);
 
-        // Find South Africa in the dataset
-        const southAfrica = covidData.countries.find(
-            country => country.country === "South Africa"
-        );
+        // Get the country selector
+        const countrySelect = document.getElementById("country-select");
 
-        console.log("South Africa:", southAfrica);
+        // Create variables to store our charts
+        let covidLineChart;
+        let covidBarChart;
 
-        // Get the latest record
-        const latestRecord = southAfrica.data[
-            southAfrica.data.length - 1
-        ];
+        // Create a function to update the dashboard
+        function updateDashboard() {
 
-        console.log("Latest record:", latestRecord);
+            // Get the selected country
+            const selectedCountry = countrySelect.value;
 
-        // Display the latest numbers in the Console
-        console.log("Confirmed:", latestRecord.confirmed);
-        console.log("Deaths:", latestRecord.deaths);
-        console.log("Recovered:", latestRecord.recovered);
+            console.log("Selected country:", selectedCountry);
 
-        // Calculate active cases
-        const activeCases =
-            latestRecord.confirmed -
-            latestRecord.deaths -
-            latestRecord.recovered;
+            // Find the selected country in the dataset
+            const countryData = covidData.countries.find(
+                country => country.country === selectedCountry
+            );
 
-        console.log("Active cases:", activeCases);
+            console.log("Country data:", countryData);
 
-        // Display confirmed cases on the dashboard
-        const confirmedCasesElement = document.getElementById("confirmed-cases");
-        confirmedCasesElement.textContent = latestRecord.confirmed;
+            // Get the latest record
+            const latestRecord = countryData.data[
+                countryData.data.length - 1
+            ];
 
-        // Display deaths on the dashboard
-        const deathsElement = document.getElementById("deaths");
-        deathsElement.textContent = latestRecord.deaths;
+            console.log("Latest record:", latestRecord);
 
-        // Display recoveries on the dashboard
-        const recoveriesElement = document.getElementById("recoveries");
-        recoveriesElement.textContent = latestRecord.recovered;
+            // Calculate active cases
+            const activeCases =
+                latestRecord.confirmed -
+                latestRecord.deaths -
+                latestRecord.recovered;
 
-        // Display active cases on the dashboard
-        const activeCasesElement = document.getElementById("active-cases");
-        activeCasesElement.textContent = activeCases;
+            // Display confirmed cases
+            const confirmedCasesElement =
+                document.getElementById("confirmed-cases");
+
+            confirmedCasesElement.textContent = latestRecord.confirmed;
+
+            // Display deaths
+            const deathsElement =
+                document.getElementById("deaths");
+
+            deathsElement.textContent = latestRecord.deaths;
+
+            // Display recoveries
+            const recoveriesElement =
+                document.getElementById("recoveries");
+
+            recoveriesElement.textContent = latestRecord.recovered;
+
+            // Display active cases
+            const activeCasesElement =
+                document.getElementById("active-cases");
+
+            activeCasesElement.textContent = activeCases;
+
+            // Get the line chart area
+            const chartCanvas = document.getElementById("covidLineChart");
+
+            // Prepare the dates for the charts
+            const dates = countryData.data.map(record => record.date);
+
+            // Prepare confirmed cases data
+            const confirmedCases = countryData.data.map(
+                record => record.confirmed
+            );
+
+            // Prepare deaths data
+            const deaths = countryData.data.map(
+                record => record.deaths
+            );
+
+            // Prepare recoveries data
+            const recoveries = countryData.data.map(
+                record => record.recovered
+            );
+
+            // Calculate increases in confirmed cases
+            const newCases = countryData.data.map((record, index) => {
+
+                // The first record has no previous date to compare with
+                if (index === 0) {
+                    return 0;
+                }
+
+                // Get the previous record
+                const previousRecord = countryData.data[index - 1];
+
+                // Calculate the increase in confirmed cases
+                return record.confirmed - previousRecord.confirmed;
+            });
+
+            console.log("Increases between recorded dates:", newCases);
+
+            // Remove the previous line chart
+            if (covidLineChart) {
+                covidLineChart.destroy();
+            }
+
+            // Create the line chart
+            covidLineChart = new Chart(chartCanvas, {
+                type: "line",
+
+                data: {
+                    labels: dates,
+
+                    datasets: [
+                        {
+                            label: "Confirmed Cases",
+                            data: confirmedCases,
+                            borderColor: "blue",
+                            backgroundColor: "rgba(0, 0, 255, 0.1)",
+                            tension: 0.3
+                        },
+                        {
+                            label: "Deaths",
+                            data: deaths,
+                            borderColor: "red",
+                            backgroundColor: "rgba(255, 0, 0, 0.1)",
+                            tension: 0.3
+                        },
+                        {
+                            label: "Recoveries",
+                            data: recoveries,
+                            borderColor: "green",
+                            backgroundColor: "rgba(0, 128, 0, 0.1)",
+                            tension: 0.3
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Number of Cases"
+                            }
+                        },
+
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Date"
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Get the bar chart area
+            const barChartCanvas =
+                document.getElementById("covidBarChart");
+
+            // Remove the previous bar chart
+            if (covidBarChart) {
+                covidBarChart.destroy();
+            }
+
+            // Create the bar chart
+            covidBarChart = new Chart(barChartCanvas, {
+                type: "bar",
+
+                data: {
+                    labels: dates,
+
+                    datasets: [
+                        {
+                            label: "Increase Since Previous Recorded Date",
+                            data: newCases,
+                            backgroundColor: "rgba(54, 162, 235, 0.7)",
+                            borderColor: "blue",
+                            borderWidth: 1
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Increase in Confirmed Cases"
+                            }
+                        },
+
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Recorded Date"
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update the dashboard when the country changes
+        countrySelect.addEventListener("change", updateDashboard);
+
+        // Display the default selected country
+        updateDashboard();
 
     } catch (error) {
         console.error("Error:", error);
@@ -62,6 +243,12 @@ async function loadCovidData() {
 
 // Run the function
 loadCovidData();
+
+
+
+
+
+
 
 
 

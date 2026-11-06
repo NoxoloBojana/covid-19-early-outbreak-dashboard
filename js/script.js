@@ -20,11 +20,13 @@ async function loadCovidData() {
         console.log("South Africa:", southAfrica);
 
         // Get the latest record
-        const latestRecord = southAfrica.data[southAfrica.data.length - 1];
+        const latestRecord = southAfrica.data[
+            southAfrica.data.length - 1
+        ];
 
         console.log("Latest record:", latestRecord);
 
-        // Display the latest numbers
+        // Display the latest numbers in the Console
         console.log("Confirmed:", latestRecord.confirmed);
         console.log("Deaths:", latestRecord.deaths);
         console.log("Recovered:", latestRecord.recovered);
@@ -37,9 +39,21 @@ async function loadCovidData() {
 
         console.log("Active cases:", activeCases);
 
+        // Display confirmed cases on the dashboard
         const confirmedCasesElement = document.getElementById("confirmed-cases");
+        confirmedCasesElement.textContent = latestRecord.confirmed;
 
-        confirmedCasesElement.textContent = latestRecord.confirmed; 
+        // Display deaths on the dashboard
+        const deathsElement = document.getElementById("deaths");
+        deathsElement.textContent = latestRecord.deaths;
+
+        // Display recoveries on the dashboard
+        const recoveriesElement = document.getElementById("recoveries");
+        recoveriesElement.textContent = latestRecord.recovered;
+
+        // Display active cases on the dashboard
+        const activeCasesElement = document.getElementById("active-cases");
+        activeCasesElement.textContent = activeCases;
 
     } catch (error) {
         console.error("Error:", error);
@@ -48,3 +62,6 @@ async function loadCovidData() {
 
 // Run the function
 loadCovidData();
+
+
+

@@ -37,6 +37,10 @@ async function loadCovidData() {
 
         console.log("Active cases:", activeCases);
 
+        const confirmedCasesElement = document.getElementById("confirmed-cases");
+
+        confirmedCasesElement.textContent = latestRecord.confirmed; 
+
     } catch (error) {
         console.error("Error:", error);
     }
